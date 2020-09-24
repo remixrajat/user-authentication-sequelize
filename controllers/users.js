@@ -38,23 +38,22 @@ module.exports = {
           user_id: loginDetails.id,
         },
       });
-      if (tokenDetails === null) {
+      if (!tokenDetails) {
         let accessDetails = await db.Accesstoken.create({
           user_id: loginDetails.id,
           access_token: md5(new Date().getTime()),
           expiry: new Date().getTime() + 3600000,
         });
-        await db.User.update(
-          { firstlogin: true },
-          { where: { username: req.body.username } }
-        );
         res.json(accessDetails.access_token);
       } else {
         await db.Accesstoken.update(
           { expiry: new Date().getTime() + 3600000 },
           { where: { user_id: loginDetails.id } }
         );
-        res.send("expiry time updated.");
+        let foundDetail = await db.Accesstoken.findOne({
+          where: { id: loginDetails.id },
+        });
+        res.send(foundDetail.access_token);
       }
     } catch (err) {
       res.send(err);
