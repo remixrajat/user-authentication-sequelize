@@ -26,10 +26,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    firstlogin: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
-    },
   });
   return User;
 };

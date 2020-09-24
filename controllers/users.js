@@ -33,7 +33,12 @@ module.exports = {
           password: md5(req.body.password),
         },
       });
-      if (loginDetails.firstlogin === false) {
+      let tokenDetails = await db.Accesstoken.findOne({
+        where: {
+          user_id: loginDetails.id,
+        },
+      });
+      if (tokenDetails === null) {
         let accessDetails = await db.Accesstoken.create({
           user_id: loginDetails.id,
           access_token: md5(new Date().getTime()),
@@ -43,7 +48,7 @@ module.exports = {
           { firstlogin: true },
           { where: { username: req.body.username } }
         );
-        res.json(accessDetails);
+        res.json(accessDetails.access_token);
       } else {
         await db.Accesstoken.update(
           { expiry: new Date().getTime() + 3600000 },
@@ -57,10 +62,13 @@ module.exports = {
   },
   getId: async (req, res) => {
     try {
-      let accessDetails = db.User.findOne({
-        where: { id: req.headers.accesstoken },
+      let accessDetails = await db.Accesstoken.findOne({
+        where: { access_token: req.headers.accesstoken },
       });
-      res.json(accessDetails);
+      let userDetails = await db.User.findOne({
+        where: { id: accessDetails.user_id },
+      });
+      res.json(userDetails);
     } catch (err) {
       res.send(err);
     }
