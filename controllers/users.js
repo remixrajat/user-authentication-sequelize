@@ -98,19 +98,7 @@ module.exports = {
       res.json(err);
     }
   },
-  getId: async (req, res) => {
-    try {
-      let accessDetails = await db.Accesstoken.findOne({
-        where: { access_token: req.headers.accesstoken },
-      });
-      let userDetails = await db.User.findOne({
-        where: { id: accessDetails.user_id },
-      });
-      res.json(userDetails);
-    } catch (err) {
-      res.json(err);
-    }
-  },
+
   deleteUser: async (req, res) => {
     try {
       await db.User.destroy({
@@ -121,6 +109,7 @@ module.exports = {
       res.json(err);
     }
   },
+  
   getPages: async (req, res) => {
     try {
       const page = await db.User.findAll({

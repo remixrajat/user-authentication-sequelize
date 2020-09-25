@@ -1,5 +1,3 @@
-const { Sequelize } = require(".");
-
 module.exports = (sequelize, Sequelize) => {
   const Accesstoken = sequelize.define("Accesstoken", {
     user_id: {

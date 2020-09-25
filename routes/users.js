@@ -9,11 +9,6 @@ router.get(
   Userauthentication.authentication,
   Usercontroller.getUsers
 );
-router.get(
-  "/user/get",
-  Userauthentication.authentication,
-  Usercontroller.getId
-);
 router.put(
   "/user/delete",
   Userauthentication.authentication,

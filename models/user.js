@@ -1,5 +1,3 @@
-const db = require("../models");
-const data = require("./address");
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("User", {
     username: {
@@ -29,5 +27,8 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
   });
+  User.associate = function (models) {
+    User.hasMany(models.Address);
+  };
   return User;
 };
