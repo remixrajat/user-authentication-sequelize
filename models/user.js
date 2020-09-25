@@ -1,3 +1,5 @@
+const db = require("../models");
+const data = require("./address");
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("User", {
     username: {
