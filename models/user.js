@@ -27,5 +27,8 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
   });
+  User.associate = function (models) {
+    User.hasMany(models.Address);
+  };
   return User;
 };
