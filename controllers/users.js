@@ -1,7 +1,6 @@
 const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
-const dotenv = require("dotenv");
 
 module.exports = {
   getUsers: async (req, res) => {

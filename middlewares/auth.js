@@ -1,5 +1,4 @@
 const db = require("../models");
-const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 
 module.exports = {

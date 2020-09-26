@@ -1,4 +1,3 @@
-const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const express = require("express");
 const sequelize = require("sequelize");
