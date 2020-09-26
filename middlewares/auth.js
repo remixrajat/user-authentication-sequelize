@@ -1,15 +1,22 @@
 const db = require("../models");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   authentication: async (req, res, next) => {
-    let accessDetails = await db.Accesstoken.findOne({
-      where: { access_token: req.headers.accesstoken },
+    const accessHeader = req.headers.authorization;
+    const token = accessHeader && accessHeader.split(" ")[1];
+    if (!token) return res.sendStatus(400);
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+      if (err) {
+        res.status(401).json(err);
+      } else {
+        let userDetails = await db.User.findOne({ where: { id: user.token } });
+        if (!userDetails) {
+          res.sendStatus(401);
+        } else {
+          next();
+        }
+      }
     });
-    let remTime = accessDetails.expiry - new Date().getMinutes();
-    if (remTime > 0) {
-      next();
-    } else {
-      res.send("Login Again.");
-    }
   },
 };

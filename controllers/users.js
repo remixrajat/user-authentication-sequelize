@@ -1,4 +1,5 @@
 const md5 = require("md5");
+const jwt = require("jsonwebtoken");
 const db = require("../models");
 
 module.exports = {
@@ -72,28 +73,8 @@ module.exports = {
           password: md5(req.body.password),
         },
       });
-      let tokenDetails = await db.Accesstoken.findOne({
-        where: {
-          user_id: loginDetails.id,
-        },
-      });
-      if (!tokenDetails) {
-        let accessDetails = await db.Accesstoken.create({
-          user_id: loginDetails.id,
-          access_token: md5(new Date().getTime()),
-          expiry: new Date().getMinutes() + 60,
-        });
-        res.json(accessDetails.access_token);
-      } else {
-        await db.Accesstoken.update(
-          { expiry: new Date().getMinutes() + 60 },
-          { where: { user_id: loginDetails.id } }
-        );
-        let foundDetail = await db.Accesstoken.findOne({
-          where: { user_id: loginDetails.id },
-        });
-        res.send(foundDetail.access_token);
-      }
+      let token = jwt.sign({token: loginDetails.id}, process.env.TOKEN_SECRET, {expiresIn: "1h"});
+      res.send(token);
     } catch (err) {
       res.json(err);
     }
