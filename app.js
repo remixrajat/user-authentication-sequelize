@@ -1,8 +1,10 @@
+const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const express = require("express");
 const sequelize = require("sequelize");
 const app = express();
 const db = require("./models");
+require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const apiRoutes = require("./routes/users");
 app.use(bodyParser.urlencoded({ extended: false }));
