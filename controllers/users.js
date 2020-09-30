@@ -73,6 +73,7 @@ module.exports = {
           password: md5(req.body.password),
         },
       });
+      
       let token = jwt.sign({token: loginDetails.id}, process.env.TOKEN_SECRET, {expiresIn: "1h"});
       res.send(token);
     } catch (err) {
