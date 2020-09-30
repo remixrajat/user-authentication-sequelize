@@ -1,41 +1,42 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+const passportJwt = require("passport-jwt");
 const Usercontroller = require("../controllers/users");
-const Userauthentication = require("../middlewares/auth");
 
 router.post("/user/createUser", Usercontroller.createUser);
 router.get(
   "/user/getUsers",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.getUsers
 );
 router.put(
   "/user/delete",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.deleteUser
 );
 router.get(
   "/user/list/:page",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.getPages
 );
 router.post("/user/login", Usercontroller.userLogin);
 
 router.post(
   "/user/address",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.createAddress
 );
 
 router.get(
   "/user/address/get",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.getAddress
 );
 
 router.get(
   "/user/getAddress/:id",
-  Userauthentication.authentication,
+  passport.authenticate('jwt', { session: false }),
   Usercontroller.getUserById
 );
 

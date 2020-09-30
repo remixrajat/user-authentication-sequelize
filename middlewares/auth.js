@@ -1,22 +1,27 @@
-const db = require("../models");
-const jwt = require("jsonwebtoken");
+"use strict";
 
-module.exports = {
-  authentication: async (req, res, next) => {
-    const accessHeader = req.headers.authorization;
-    const token = accessHeader && accessHeader.split(" ")[1];
-    if (!token) return res.sendStatus(400);
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
-      if (err) {
-        res.status(401).json(err);
+var JWTStrategy = require("passport-jwt").Strategy,
+  ExtractJwt = require("passport-jwt").ExtractJwt;
+const db = require("../models");
+
+function hookJWTStrategy(passport) {
+  var options = {};
+
+  options.secretOrKey = process.env.TOKEN_SECRET;
+  options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+  options.ignoreExpiration = false;
+
+  passport.use(
+    new JWTStrategy(options, async (JWTPayload, callback) => {
+      console.log(JWTPayload, "aaaaaaaaaaaaaaaaaaaaaaaaaa");
+      const user = await db.User.findOne({ where: { id: JWTPayload.token } });
+      if (!user) {
+        callback(null, false);
+        return;
       } else {
-        let userDetails = await db.User.findOne({ where: { id: user.token } });
-        if (!userDetails) {
-          res.sendStatus(401);
-        } else {
-          next();
-        }
+        callback(null, user);
       }
-    });
-  },
-};
+    })
+  );
+}
+module.exports = hookJWTStrategy;
